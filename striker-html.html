@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Striker Plan"/>
+<title>Striker Training Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0a0a;color:#fff;font-family:'Bebas Neue','Impact',sans-serif;min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#FF4D00;border-radius:2px;}
+.header{background:linear-gradient(135deg,#FF4D00,#c93300);padding:30px 20px 24px;position:relative;overflow:hidden;}
+.header::after{content:'';position:absolute;right:-20px;bottom:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.header-sub{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.6);margin-bottom:6px;text-transform:uppercase;}
+.header-title{font-size:38px;line-height:1;margin-bottom:4px;}
+.header-desc{font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,0.7);}
+.tags{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.tag-pill{font-family:'Bebas Neue',sans-serif;font-size:12px;padding:2px 10px;border-radius:20px;letter-spacing:1px;}
+.tabs{display:flex;border-bottom:1px solid #1a1a1a;}
+.tab-btn{flex:1;padding:10px;border:none;background:#141414;color:#555;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
+.tab-btn.active{color:#FF4D00;border-bottom-color:#FF4D00;background:#1a1a1a;}
+.content{padding:0 16px 80px;}
+.section-label{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;color:#666;margin-bottom:10px;margin-top:20px;text-transform:uppercase;}
+.session-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.sess-btn{width:40px;height:40px;border-radius:4px;border:2px solid transparent;background:#1a1a1a;color:#666;font-family:'Bebas Neue',sans-serif;font-size:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.sess-btn:hover,.sess-btn:active{border-color:#FF4D00;color:#FF4D00;}
+.sess-btn.active{background:#FF4D00;color:#fff;border-color:#FF4D00;}
+.sess-btn.done{border-color:#00E87A;color:#00E87A;}
+.sess-header{margin-top:20px;display:flex;justify-content:space-between;align-items:flex-start;}
+.sess-num{font-size:32px;line-height:1;}
+.sess-title{font-size:22px;color:#FF4D00;line-height:1.1;}
+.sess-theme{font-family:'DM Sans',sans-serif;font-size:13px;color:#666;margin-top:4px;}
+.prog-count{font-size:28px;text-align:right;}
+.prog-label{font-family:'DM Sans',sans-serif;font-size:11px;color:#444;margin-bottom:2px;}
+.progress-bar{height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin:10px 0;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#FF4D00,#FFD600);border-radius:2px;transition:width 0.4s;}
+.warmup-item{background:#111;border-left:3px solid #333;padding:10px 14px;margin-bottom:8px;border-radius:0 6px 6px 0;font-family:'DM Sans',sans-serif;font-size:14px;}
+.warmup-name{font-weight:600;color:#ccc;margin-bottom:2px;}
+.warmup-dur{color:#555;font-weight:400;}
+.warmup-desc{color:#666;}
+.drill-card{background:#141414;border:1px solid #222;border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s;cursor:pointer;}
+.drill-card.expanded{border-color:#FF4D00;}
+.drill-card.done-drill{opacity:0.5;}
+.drill-top{padding:14px 14px 12px;display:flex;align-items:center;gap:12px;}
+.check-btn{width:28px;height:28px;border-radius:50%;border:2px solid #333;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;font-size:14px;}
+.check-btn.checked{background:#00E87A;border-color:#00E87A;color:#000;}
+.drill-info{flex:1;}
+.drill-tag-row{display:flex;gap:8px;margin-bottom:4px;}
+.drill-name{font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1;}
+.drill-meta{font-family:'DM Sans',sans-serif;font-size:12px;color:#555;margin-top:2px;}
+.drill-arrow{color:#444;font-size:18px;transition:transform 0.2s;}
+.drill-desc{padding:12px 14px 14px 54px;font-family:'DM Sans',sans-serif;font-size:14px;color:#aaa;line-height:1.7;border-top:1px solid #1f1f1f;}
+.notes-field{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:10px 12px;color:#aaa;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;resize:none;line-height:1.6;}
+.notes-field:focus{border-color:#555;}
+.cooldown-box{background:#111;border:1px dashed #2a2a2a;border-radius:8px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;color:#888;line-height:1.6;margin-top:10px;}
+.benchmark-box{margin-top:20px;background:#111;border:1px solid #9B5CF6;border-radius:8px;padding:16px;}
+.bm-title{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#9B5CF6;letter-spacing:1px;margin-bottom:12px;}
+.bm-label{font-family:'DM Sans',sans-serif;font-size:12px;color:#666;margin-bottom:4px;}
+.input-field{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;width:100%;outline:none;}
+.input-field:focus{border-color:#FF4D00;}
+.bm-hint{font-family:'DM Sans',sans-serif;font-size:12px;color:#444;margin-top:8px;}
+/* Tracker */
+.tracker-card{background:#141414;border-radius:8px;border:1px solid #222;padding:16px;margin-bottom:4px;}
+.table-header{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:10px 16px;background:#111;border-bottom:1px solid #222;}
+.table-col-head{font-family:'DM Sans',sans-serif;font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase;}
+.table-row{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:14px 16px;border-bottom:1px solid #1a1a1a;align-items:center;}
+.table-metric{font-family:'DM Sans',sans-serif;font-size:13px;color:#ccc;}
+.table-val{font-family:'DM Sans',sans-serif;font-size:14px;}
+.delta-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;}
+.note-row{background:#141414;border-radius:8px;border:1px solid #1f1f1f;margin-bottom:8px;overflow:hidden;}
+.note-row-header{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.note-status{font-family:'DM Sans',sans-serif;font-size:11px;padding:2px 8px;border-radius:10px;}
+.sess-dot{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:14px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-sub">Striker Development Plan · 8 Sessions · 45 min</div>
+  <div class="header-title">EXPLOSIVE STRIKER</div>
+  <div class="header-desc">Age 14 · 6'2" · Acceleration + Heading Priority</div>
+  <div class="tags">
+    <span class="tag-pill" style="background:#FF4D00;color:#fff">Acceleration</span>
+    <span class="tag-pill" style="background:#00C2FF;color:#000">Reaction</span>
+    <span class="tag-pill" style="background:#FFD600;color:#000">Strength</span>
+    <span class="tag-pill" style="background:#00E87A;color:#000">Technical</span>
+    <span class="tag-pill" style="background:#9B5CF6;color:#fff">Heading</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" id="tab-program" onclick="switchTab('program')">Program</button>
+  <button class="tab-btn" id="tab-tracker" onclick="switchTab('tracker')">Progress Tracker</button>
+</div>
+
+<div id="view-program" class="content"></div>
+<div id="view-tracker" class="content" style="display:none"></div>
+
+<script>
+const TAG_COLORS = {
+  Acceleration:{bg:"#FF4D00",text:"#fff"},
+  Reaction:{bg:"#00C2FF",text:"#000"},
+  Strength:{bg:"#FFD600",text:"#000"},
+  Technical:{bg:"#00E87A",text:"#000"},
+  Heading:{bg:"#9B5CF6",text:"#fff"}
+};
+
+const BENCHMARKS = {
+  sprintTime:{label:"10m Sprint",unit:"secs",placeholder:"e.g. 1.91",lower:true},
+  sprint20Time:{label:"20m Sprint",unit:"secs",placeholder:"e.g. 3.37",lower:true},
+  headingScore:{label:"Heading Accuracy",unit:"/ 8",placeholder:"e.g. 5"},
+  reactionScore:{label:"Reaction Score",unit:"/ 8",placeholder:"e.g. 6"}
+};
+
+const SESSIONS = [
+  {n:1,title:"Foundation & Assessment",theme:"Baseline + First Steps",
+   warmup:[
+     {name:"Dynamic leg swings",dur:"2 min",desc:"Forward/back and lateral, 15 each leg"},
+     {name:"Hip circles & ankle rolls",dur:"2 min",desc:"Loosen key joints for explosive work"},
+     {name:"High knees jog",dur:"1 min",desc:"Length of penalty box and back"},
+     {name:"Neck rolls & shoulder circles",dur:"1 min",desc:"Loosen neck for heading work"}
+   ],
+   main:[
+     {name:"10m Sprint Baseline",sets:"6 reps",rest:"45s",desc:"Standing start to cone — log times. This is your benchmark.",tag:"Acceleration"},
+     {name:"20m Sprint Baseline",sets:"4 reps",rest:"60s",desc:"Standing start to cone — log times. This is your second benchmark.",tag:"Acceleration"},
+     {name:"Cone Weave to Shot",sets:"5 reps",rest:"30s",desc:"Weave 5 cones (1m apart), finish with a strike on goal. Focus on clean first touch.",tag:"Technical"},
+     {name:"Defender Back-to-Goal Hold",sets:"4 x 20s",rest:"30s",desc:"Coach/feeder applies light pressure from behind. Hold position, shield, lay off ball.",tag:"Strength"},
+     {name:"Reaction Drop Ball",sets:"8 reps",rest:"20s",desc:"Coach holds ball at shoulder height, drops it — son reacts and sprints to control before second bounce.",tag:"Reaction"},
+     {name:"Standing Header Baseline",sets:"8 reps",rest:"20s",desc:"Coach throws ball to head height — head back to coach with forehead. No jump yet. Assess technique baseline.",tag:"Heading"}
+   ],
+   cooldown:"Quad stretch, hamstring stretch, calf stretch, gentle neck stretch front/back. 5 mins.",
+   hasBenchmark:true},
+
+  {n:2,title:"Explosive Starts",theme:"Drive Phase Mechanics",
+   warmup:[
+     {name:"A-Skip drills",dur:"2 min",desc:"Exaggerated knee drive, arms pumping — sprint mechanics"},
+     {name:"Bounding strides",dur:"2 min",desc:"Long powerful strides across 15m, 4 reps"},
+     {name:"Lateral shuffle + sprint",dur:"1 min",desc:"Shuffle 3m left/right then burst forward 10m"},
+     {name:"Neck activation",dur:"1 min",desc:"Push hand against forehead and resist x 10. Strengthens for headers."}
+   ],
+   main:[
+     {name:"3-Point Stance Sprints",sets:"8 x 10m",rest:"40s",desc:"One hand on ground, driving off back foot. Forces forward lean and explosive first step.",tag:"Acceleration"},
+     {name:"Falling Start Sprints",sets:"6 x 15m",rest:"45s",desc:"Lean forward until nearly falling, then sprint. Trains forward body lean on drive phase.",tag:"Acceleration"},
+     {name:"First Touch Forward Sprint",sets:"6 reps",rest:"30s",desc:"Ball fed from coach — one touch to set forward, sprint onto it and finish.",tag:"Technical"},
+     {name:"Jump & Header to Target",sets:"8 reps",rest:"25s",desc:"Coach holds ball above head height. Son jumps and heads downward toward a target cone. Focus on timing the jump.",tag:"Heading"},
+     {name:"Isometric Wall Sit",sets:"3 x 40s",rest:"30s",desc:"Back against post or wall, 90° hold. Builds quad strength for explosive jump headers.",tag:"Strength"}
+   ],
+   cooldown:"Pigeon stretch, seated hamstring, hip flexor lunge hold 30s each side, neck side stretch."},
+
+  {n:3,title:"Reaction Training",theme:"Visual Stimulus & Response",
+   warmup:[
+     {name:"Colour/number call drill",dur:"3 min",desc:"Coach calls LEFT/RIGHT — son reacts with shuffle step."},
+     {name:"Agility ladder run-throughs",dur:"2 min",desc:"Lay cones as mock ladder. High knees in/out x 4 runs."}
+   ],
+   main:[
+     {name:"Mirror Drill",sets:"5 x 20s",rest:"30s",desc:"Face coach 2m apart. Son mirrors every movement — shuffles, drops, jumps. React, don't predict.",tag:"Reaction"},
+     {name:"Coach Points — Sprint to Cone",sets:"10 reps",rest:"20s",desc:"4 cones placed in a cross, 5m from son. Coach points — son bursts to that cone and back. Random.",tag:"Reaction"},
+     {name:"Back-to-goal Turn & Sprint",sets:"8 reps",rest:"30s",desc:"Son faces away. Coach shouts 'NOW' and kicks ball. Son turns, finds ball, controls and finishes.",tag:"Reaction"},
+     {name:"Reaction Header",sets:"8 reps",rest:"20s",desc:"Son faces away. Coach shouts and throws ball — son turns, locates ball mid-air, jumps and heads on target.",tag:"Heading"},
+     {name:"Throw-down Reaction Headers",sets:"6 reps",rest:"20s",desc:"Coach throws ball high from different positions. Son reacts quickly to position and head on target.",tag:"Heading"}
+   ],
+   cooldown:"Full neck rolls, shoulder rolls, gentle forward fold, 5 min walk."},
+
+  {n:4,title:"Hold-Up Play & Strength",theme:"Back to Goal, Win the Ball",
+   warmup:[
+     {name:"Lateral squat walks",dur:"2 min",desc:"Wide lateral squat walks — 10 steps each direction x 3"},
+     {name:"Walking lunges",dur:"2 min",desc:"20m out and back — big stride, upright chest"},
+     {name:"Hip flexor activation",dur:"1 min",desc:"Kneeling hip flexor march — drive knee up from low lunge x 10 each side"}
+   ],
+   main:[
+     {name:"Shielding Possession Circuit",sets:"5 x 30s",rest:"20s",desc:"Coach pressures from behind. Son receives, shields with body, holds for 5s, lays off.",tag:"Strength"},
+     {name:"Chest Control Hold",sets:"6 reps",rest:"20s",desc:"Coach throws ball — chest control, land, immediately shield from pressure. No second touch until 3 seconds up.",tag:"Technical"},
+     {name:"Aerial Duel Header",sets:"8 reps",rest:"25s",desc:"Coach lightly contests the ball in the air. Son must time jump, use arms for position, and win the header.",tag:"Heading"},
+     {name:"Single Leg Balance Hold",sets:"3 x 30s each leg",rest:"20s",desc:"Use a post/cone for initial support. Builds ankle/knee stability for holding off defenders and landing after headers.",tag:"Strength"},
+     {name:"Turn & Finish Under Pressure",sets:"6 reps",rest:"30s",desc:"Ball played in to feet, coach pressures — son decides: hold or turn and shoot.",tag:"Technical"}
+   ],
+   cooldown:"Glute stretch, IT band stretch, thoracic rotation x 10 each side, neck stretch."},
+
+  {n:5,title:"Speed Endurance",theme:"Repeated Sprints with Quality",
+   warmup:[
+     {name:"Stride progressions",dur:"3 min",desc:"4 runs over 30m — 50%, 70%, 85%, 95% effort."},
+     {name:"Calf raises + ankle hops",dur:"2 min",desc:"2 x 20 calf raises. Then 30s fast low ankle hops."}
+   ],
+   main:[
+     {name:"30m Sprint Repeats",sets:"8 x 30m",rest:"60s",desc:"Maximum effort every rep. Standing start. Track time — aim for consistency across all 8.",tag:"Acceleration"},
+     {name:"Sprint → Stop → Shoot",sets:"6 reps",rest:"45s",desc:"Full 20m sprint, decelerate into a ball, one touch and finish.",tag:"Acceleration"},
+     {name:"Run & Head on the Move",sets:"8 reps",rest:"30s",desc:"Son sprints 10m toward goal, coach delivers ball from the side — head on target without breaking stride.",tag:"Heading"},
+     {name:"Box-to-Box Run",sets:"4 reps",rest:"90s",desc:"Sprint penalty box to halfway line and back at 90%+ effort.",tag:"Acceleration"},
+     {name:"Recovery Hold-Up",sets:"4 x 20s",rest:"20s",desc:"After each box-to-box, immediately receive ball and hold up play for 15s.",tag:"Strength"}
+   ],
+   cooldown:"Extended cool-down — 8 min. Full lower body stretch, light jog, breathing focus."},
+
+  {n:6,title:"Combination Play",theme:"Link-up, Spin, Finish",
+   warmup:[
+     {name:"Quick 1-2 pass patterns",dur:"3 min",desc:"Short-short-long x 5 with coach"},
+     {name:"Dynamic stretching circuit",dur:"2 min",desc:"Leg swings, hip hinges, arm circles, torso twists"}
+   ],
+   main:[
+     {name:"Layoff & Spin Drill",sets:"8 reps each side",rest:"20s",desc:"Ball played to feet, one-touch layoff, immediately spin and sprint in behind for return ball.",tag:"Technical"},
+     {name:"Near Post Flick-On Header",sets:"8 reps",rest:"25s",desc:"Cross delivered from wide. Son attacks near post and flicks header toward far post / goal.",tag:"Heading"},
+     {name:"Back Post Run & Power Header",sets:"6 reps",rest:"30s",desc:"Cross from opposite side. Son makes a late back post run and heads powerfully downward.",tag:"Heading"},
+     {name:"3-Cone Acceleration Choice",sets:"8 reps",rest:"25s",desc:"3 cones in a triangle 6m apart. Coach points AFTER son starts moving — he must redirect.",tag:"Acceleration"},
+     {name:"Small Goal Finishing Runs",sets:"10 reps",rest:"20s",desc:"Ball placed 18m out. Son starts at halfway of that distance. Sprint onto it, one touch and finish.",tag:"Technical"}
+   ],
+   cooldown:"Hip flexors, hamstrings, thoracic rotation, neck stretch. 5 min jog."},
+
+  {n:7,title:"Match Intensity",theme:"Full Game Scenarios",
+   warmup:[
+     {name:"Full dynamic warm-up",dur:"5 min",desc:"High knees, butt kicks, A-skips, lateral shuffles, 2 build-up strides at 80%, neck rolls"}
+   ],
+   main:[
+     {name:"1v1 Finishing Scenarios",sets:"8 reps",rest:"30s",desc:"Coach acts as goalkeeper or defender. Rotate scenario each rep.",tag:"Technical"},
+     {name:"Pressure Turns",sets:"6 reps each side",rest:"20s",desc:"Ball into feet under full contact pressure. Choose to hold or turn — coach doesn't let off.",tag:"Strength"},
+     {name:"Corner Kick Header Scenarios",sets:"8 reps",rest:"25s",desc:"Practice near post flick, penalty spot power header, and back post redirect. Mix all three types.",tag:"Heading"},
+     {name:"Game Reaction Sprint",sets:"8 reps",rest:"30s",desc:"Coach kicks ball randomly 15–25m in any direction. Son reacts and chases it down.",tag:"Reaction"},
+     {name:"Headed Goal Attempt",sets:"6 reps",rest:"20s",desc:"Coach delivers lofted cross. Son must header on target. Vary delivery each rep.",tag:"Heading"}
+   ],
+   cooldown:"Full body stretch, 5 min, discuss what went well and what to focus on in session 8."},
+
+  {n:8,title:"Peak & Test",theme:"Measure Progress, Finish Strong",
+   warmup:[
+     {name:"Full competition warm-up",dur:"5 min",desc:"Replicate the warm-up your son does before a real match."}
+   ],
+   main:[
+     {name:"10m Sprint Re-test",sets:"6 reps",rest:"45s",desc:"Same as Session 1 baseline. Compare times — this is the proof of progress.",tag:"Acceleration"},
+     {name:"20m Sprint Re-test",sets:"4 reps",rest:"60s",desc:"Same as Session 1 baseline. Compare times — second proof of progress.",tag:"Acceleration"},
+     {name:"Reaction Benchmark",sets:"10 reps",rest:"20s",desc:"Repeat the Session 1 drop ball test. Count how many he gets before second bounce.",tag:"Reaction"},
+     {name:"Heading Accuracy Test",sets:"10 reps",rest:"20s",desc:"10 deliveries — mix of standing, jumping, near post, back post. Count how many hit the target zone.",tag:"Heading"},
+     {name:"Best of Finishing",sets:"10 reps",rest:"20s",desc:"Mix of all finishing types — layoffs, spins, one-twos, headers, reaction shots.",tag:"Technical"},
+     {name:"Hold-up Challenge",sets:"5 x 30s",rest:"20s",desc:"Maximum pressure from coach. Final test of strength gains.",tag:"Strength"}
+   ],
+   cooldown:"Full stretch, 8 min. Celebrate. Review progress on all benchmarks.",
+   hasBenchmark:true}
+];
+
+// State
+let activeSession = 0;
+let expandedDrill = null;
+let completed = JSON.parse(localStorage.getItem('striker_completed')||'{}');
+let bmData = JSON.parse(localStorage.getItem('striker_bm')||'{"s1":{},"s8":{}}');
+let notesData = JSON.parse(localStorage.getItem('striker_notes')||'["","","","","","","",""]');
+let currentView = 'program';
+
+function save(){
+  localStorage.setItem('striker_completed', JSON.stringify(completed));
+  localStorage.setItem('striker_bm', JSON.stringify(bmData));
+  localStorage.setItem('striker_notes', JSON.stringify(notesData));
+}
+
+function switchTab(v){
+  currentView = v;
+  document.getElementById('tab-program').classList.toggle('active', v==='program');
+  document.getElementById('tab-tracker').classList.toggle('active', v==='tracker');
+  document.getElementById('view-program').style.display = v==='program'?'':'none';
+  document.getElementById('view-tracker').style.display = v==='tracker'?'':'none';
+  if(v==='tracker') renderTracker();
+}
+
+function sessCompleted(i){
+  return SESSIONS[i].main.every((_,j)=>completed[`${i}-${j}`]);
+}
+
+function totalDone(){
+  return SESSIONS.filter((_,i)=>sessCompleted(i)).length;
+}
+
+// ── PROGRAM ──
+function renderProgram(){
+  const s = SESSIONS[activeSession];
+  const doneCount = s.main.filter((_,j)=>completed[`${activeSession}-${j}`]).length;
+  const pct = (doneCount/s.main.length)*100;
+
+  let html = `
+  <div class="section-label" style="margin-top:20px">Select Session</div>
+  <div class="session-grid">
+    ${SESSIONS.map((ss,i)=>`
+      <button class="sess-btn ${activeSession===i?'active':''} ${sessCompleted(i)&&activeSession!==i?'done':''}"
+        onclick="selectSession(${i})">${i+1}</button>
+    `).join('')}
+  </div>
+  <div class="sess-header">
+    <div>
+      <div class="sess-num">SESSION ${s.n}</div>
+      <div class="sess-title">${s.title.toUpperCase()}</div>
+      <div class="sess-theme">${s.theme}</div>
+    </div>
+    <div>
+      <div class="prog-label">PROGRESS</div>
+      <div class="prog-count" style="color:${doneCount===s.main.length?'#00E87A':'#fff'}">${doneCount}/${s.main.length}</div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+
+  <div class="section-label">Warm-Up · ~5 min</div>
+  ${s.warmup.map(w=>`
+    <div class="warmup-item">
+      <div class="warmup-name">${w.name} <span class="warmup-dur">· ${w.dur}</span></div>
+      <div class="warmup-desc">${w.desc}</div>
+    </div>
+  `).join('')}
+
+  <div class="section-label">Main Drills · ~35 min</div>
+  ${s.main.map((d,i)=>{
+    const key=`${activeSession}-${i}`;
+    const chk=completed[key];
+    const exp=expandedDrill===i;
+    const tc=TAG_COLORS[d.tag]||{bg:'#333',text:'#fff'};
+    return `
+    <div class="drill-card ${exp?'expanded':''} ${chk?'done-drill':''}" onclick="toggleDrill(${i})">
+      <div class="drill-top">
+        <button class="check-btn ${chk?'checked':''}" onclick="event.stopPropagation();toggleCheck(${i})">
+          ${chk?'✓':''}
+        </button>
+        <div class="drill-info">
+          <div class="drill-tag-row">
+            <span class="tag-pill" style="background:${tc.bg};color:${tc.text};font-size:10px">${d.tag}</span>
+          </div>
+          <div class="drill-name">${d.name}</div>
+          <div class="drill-meta">${d.sets} · ${d.rest} rest</div>
+        </div>
+        <div class="drill-arrow" style="transform:${exp?'rotate(180deg)':'none'}">↓</div>
+      </div>
+      ${exp?`<div class="drill-desc">${d.desc}</div>`:''}
+    </div>`;
+  }).join('')}
+
+  <div class="section-label">Session Notes</div>
+  <textarea class="notes-field" rows="3" placeholder="Add notes for this session…"
+    oninput="updateNote(this.value)">${notesData[activeSession]}</textarea>
+
+  <div class="section-label">Cool-Down · ~5 min</div>
+  <div class="cooldown-box">${s.cooldown}</div>
+  `;
+
+  if(s.hasBenchmark){
+    const sess = activeSession===0?'s1':'s8';
+    const label = activeSession===0?'📋 Record Baseline Benchmarks':'📋 Record Final Benchmarks';
+    html += `
+    <div class="benchmark-box">
+      <div class="bm-title">${label}</div>
+      ${Object.entries(BENCHMARKS).map(([k,b])=>`
+        <div style="margin-bottom:12px">
+          <div class="bm-label">${b.label} <span style="color:#444">${b.unit}</span></div>
+          <input class="input-field" type="text" placeholder="${b.placeholder}"
+            value="${bmData[sess][k]||''}"
+            oninput="updateBm('${sess}','${k}',this.value)"/>
+        </div>
+      `).join('')}
+      <div class="bm-hint">Saved automatically to Progress Tracker.</div>
+    </div>`;
+  }
+
+  document.getElementById('view-program').innerHTML = html;
+}
+
+function selectSession(i){
+  activeSession=i;
+  expandedDrill=null;
+  renderProgram();
+}
+
+function toggleDrill(i){
+  expandedDrill = expandedDrill===i?null:i;
+  renderProgram();
+}
+
+function toggleCheck(i){
+  const key=`${activeSession}-${i}`;
+  completed[key]=!completed[key];
+  save();
+  renderProgram();
+  // update tracker tab label
+  document.getElementById('tab-tracker').textContent=`Progress Tracker${totalDone()>0?' · '+totalDone()+'/8':''}`;
+}
+
+function updateNote(v){
+  notesData[activeSession]=v;
+  save();
+}
+
+function updateBm(sess,key,val){
+  bmData[sess][key]=val;
+  save();
+}
+
+// ── TRACKER ──
+function getDelta(key){
+  const s1=parseFloat(bmData.s1[key]);
+  const s8=parseFloat(bmData.s8[key]);
+  if(isNaN(s1)||isNaN(s8)) return null;
+  const diff=s8-s1;
+  const pct=((Math.abs(diff)/s1)*100).toFixed(1);
+  const improved=BENCHMARKS[key].lower?diff<0:diff>0;
+  return {diff:diff.toFixed(2),pct,improved};
+}
+
+function renderTracker(){
+  const done=totalDone();
+  const pct=(done/8)*100;
+
+  let html=`
+  <div class="section-label" style="margin-top:20px">Overall Progress</div>
+  <div class="tracker-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-family:'DM Sans',sans-serif;font-size:13px;color:#888">Sessions completed</div>
+      <div style="font-size:26px;color:${done===8?'#00E87A':'#fff'}">${done} / 8</div>
+    </div>
+    <div class="progress-bar" style="margin:0">
+      <div class="progress-fill" style="width:${pct}%"></div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap">
+      ${SESSIONS.map((_,i)=>{
+        const d=sessCompleted(i);
+        return `<div class="sess-dot" style="background:${d?'#00E87A':'#1a1a1a'};color:${d?'#000':'#444'};border:1px solid ${d?'#00E87A':'#2a2a2a'}">
+          ${d?'✓':i+1}</div>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <div class="section-label">Benchmark Comparison</div>
+  <div style="background:#141414;border-radius:8px;border:1px solid #222;overflow:hidden">
+    <div class="table-header">
+      ${['Metric','Session 1','Session 8','Change'].map(h=>`<div class="table-col-head">${h}</div>`).join('')}
+    </div>
+    ${Object.entries(BENCHMARKS).map(([k,b])=>{
+      const d=getDelta(k);
+      const v1=bmData.s1[k];
+      const v8=bmData.s8[k];
+      return `<div class="table-row">
+        <div class="table-metric">${b.label}</div>
+        <div class="table-val" style="color:${v1?'#fff':'#333'}">${v1?v1+' '+b.unit:'—'}</div>
+        <div class="table-val" style="color:${v8?'#fff':'#333'}">${v8?v8+' '+b.unit:'—'}</div>
+        <div>${d?`<span class="delta-badge" style="background:${d.improved?'rgba(0,232,122,0.15)':'rgba(255,77,0,0.15)'};color:${d.improved?'#00E87A':'#FF4D00'}">
+          ${d.improved?'▲':'▼'} ${d.pct}%</span>`:'<span style="font-family:\'DM Sans\',sans-serif;font-size:13px;color:#333">—</span>'}</div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#444;margin-top:8px">
+    Enter benchmarks in Session 1 and Session 8 of the Program tab to see your comparison.
+  </div>
+
+  <div class="section-label">Session Notes Log</div>
+  ${SESSIONS.map((s,i)=>{
+    const d=sessCompleted(i);
+    const cnt=s.main.filter((_,j)=>completed[`${i}-${j}`]).length;
+    return `<div class="note-row">
+      <div class="note-row-header">
+        <div>
+          <span style="font-size:18px">S${i+1} · </span>
+          <span style="font-size:16px;color:#FF4D00">${s.title.toUpperCase()}</span>
+        </div>
+        <div class="note-status" style="background:${d?'rgba(0,232,122,0.15)':'#1a1a1a'};color:${d?'#00E87A':'#555'}">
+          ${d?'DONE':cnt+'/'+s.main.length}
+        </div>
+      </div>
+      <div style="padding:0 14px 12px">
+        <textarea class="notes-field" rows="2" placeholder="No notes yet…"
+          oninput="updateNoteIdx(${i},this.value)">${notesData[i]}</textarea>
+      </div>
+    </div>`;
+  }).join('')}
+  `;
+
+  document.getElementById('view-tracker').innerHTML=html;
+}
+
+function updateNoteIdx(i,v){
+  notesData[i]=v;
+  save();
+}
+
+// Init
+renderProgram();
+document.getElementById('tab-tracker').textContent=`Progress Tracker${totalDone()>0?' · '+totalDone()+'/8':''}`;
+</script>
+</body>
+</html>
